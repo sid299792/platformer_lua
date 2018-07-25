@@ -10,7 +10,7 @@ function Entities:enter(world)
     self.world = world
 end
 
-function Entities.add(entity)
+function Entities:add(entity)
     table.insert(self.entityList,entity)
 end
 

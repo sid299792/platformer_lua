@@ -1,6 +1,6 @@
-Gamestate = require 'libs.hump.hump'
+Gamestate = require 'libs.hump.gamestate'
 
-local mainMenu = requre 'gamestates.mainmenu'
+local mainMenu = require 'gamestates.mainmenu'
 local gameLevel1 = require 'gamestates.gameLevel1'
 local pause = require 'gamestates.pause'
 

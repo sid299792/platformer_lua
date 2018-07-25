@@ -1,7 +1,7 @@
 local Class = require 'libs.hump.class'
 local Entity = require 'entities.Entity'
 
-local Player = Class{
+local player = Class{
     __include = Entity
 }
 
@@ -17,12 +17,10 @@ function player:init(world,x,y)
     self.friction = 20
     self.gravity = 80
     self.isJumping = false
-    self.isGrounded = false
+    self.onGround = false
     self.hasReachedMax = false
-    self.jumpacc = 500
-    self.jumpMaxSpeed = 11
-
-    self.world:add(self,self:getRect())
+    self.jumpSpeed = -110
+    self.world:add(self, x,y,self.img:getWidth(),self.img:getHeight())
 end
 
 function player:collisionFilter(other)
@@ -42,21 +40,19 @@ function player:update(dt)
 
     if love.keyboard.isDown('a') and self.xVelocity > -self.maxSpeed then
         self.xVelocity = self.xVelocity - self.acc
-    elseif love.keyboard.isDown('d') and self.xVelocity < self.maxspeed then
+    elseif love.keyboard.isDown('d') and self.xVelocity < self.maxSpeed then
         self.xVelocity = self.xVelocity + self.acc
     end
 
     if love.keyboard.isDown('w') then
-        if -self.yVelocity < self.jumpMaxSpeed and not self.hasReachedMax then
-            self.yVelocity = self.yVelocity - self.jumpAcc * dt
-        elseif math.abs(self.yVelocity) > self.jumpMaxSpeed then
-            self.hasReachedMax = true
+        if self.onGround then
+            self.yVelocity = self.yVelocity + self.jumpSpeed
+            self.onGround = false
         end
-        self.onGround = false
     end
 
-    local goalX = self.x + self.xVelocity
-    local goalY = self.y + self.yVelocity
+    local goalX = self.x + self.xVelocity * dt
+    local goalY = self.y + self.yVelocity 
 
     self.x,self.y,collisions,len = self.world:move(self,goalX,goalY)
 
